@@ -1,0 +1,11 @@
+# Local secrets
+.env
+.env.*
+!.env.example
+
+# Local OS files
+.DS_Store
+
+# Python
+__pycache__/
+.venv/

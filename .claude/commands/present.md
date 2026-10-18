@@ -1,0 +1,52 @@
+---
+description: /deck 슬라이드와 /pitch 대본을 발표자 도구(tools/presenter)에 올릴 폴더 하나로 묶는다
+---
+
+> 추천 모델: [model-routing](../../references/model-routing.md)에서 이 command의 주도·검토 모델을 확인한다. 지금 세션이 추천 모델이 아니면 한 줄로 알리고 그대로 이어서 진행한다.
+
+## 실행 표시
+
+다른 command와 같은 breadcrumb 규칙([workflow 계약](../../references/workflow-policy.md))을 따른다. 흐름 첫 줄은 Markdown 인용문(`> `)으로 표시한다. 시작에 `/present · 시작 | 행사 slug | 언어`, 종료에 `/present · 실제 상태 | 행사 slug | 폴더 경로 또는 없음 | 남은 확인`을 표시한다. 다음 command는 안내만 하고 자동 실행하지 않는다.
+
+## 하는 일
+
+발표자 도구 `tools/presenter/presenter.html`이 읽을 **업로드 폴더**만 만든다. 도구 자체(`tools/presenter/`)는 공용이라 이 command에서 고치지 않는다. 슬라이드 구성이나 대본 내용을 새로 만들지 않는다. 내용 자체를 고칠 일이 보이면 `/deck`·`/pitch`로 돌려보낸다. 글투 점검은 아래 `say` 규칙대로 이 command에서 한다.
+
+## 입력
+
+`AGENTS.md`의 현재 행사 workspace 선택을 따른다. 아래가 없으면 멈추고 만드는 command를 알려 준다.
+
+- `/deck` 결과: 렌더링된 슬라이드 이미지(슬라이드당 PNG 한 장, 16:9). 언어별 덱이 있으면 언어마다 따로 쓴다.
+- `/pitch` 결과: 같은 언어의 대본. 슬라이드 번호와 대본 절이 1:1로 맞아야 한다. 안 맞으면 어긋난 번호를 보고하고 멈춘다.
+
+## 출력
+
+`workspace/<event-slug>/output/presenter/<lang>/`에 둘을 둔다.
+
+- `deck.js`: `window.DECK`을 설정하는 데이터 파일. 형식은 `tools/presenter/README.md`를 따른다. `img`에는 같은 폴더의 파일 이름만 쓴다(경로 없이). 그래야 폴더를 통째로 올려도 열린다.
+- 슬라이드 이미지: `/deck` 렌더본을 복사한다. 원본 비율을 바꾸지 않는다.
+- 읽기용 대본 페이지(선택): 같은 `deck.js`에서 생성해 덱·발표자 화면·대본이 한 출처를 쓰게 한다.
+
+슬라이드마다 아래를 채운다.
+
+- `title`: 슬라이드 제목
+- `screen`: 청중이 보는 화면 한 줄(발표자가 지금 어디인지 알게)
+- `say`: `/pitch` 대본의 문장. 발표자가 소리 내어 말하는 문장이므로 옮기면서 `.claude/rules/writing/common.md`와 출력 언어 규칙(`ko.md`·`en.md`)으로 점검한다. 세면 나오는 것만 고친다: 같은 종결어미 네 문장 연속, `~하는 것`·`~다는 것이다` 명사화, 범주어 주어, em-dash, 정형 라벨(`핵심은`·`원리는 한 줄`·`정리하면`), 질문을 던지고 스스로 답하는 수사, 대칭으로 맞춘 세 줄 나열. 발표 문장은 해요체와 합니다체를 섞어 말하듯 쓰고, 슬라이드 글은 합니다체로 둔다. 사실·수치·줄 번호·제품 이름은 바꾸지 않는다. 고친 문장은 `/pitch` 대본에도 같은 내용으로 반영해 둘이 어긋나지 않게 한다.
+- `must`: 정확히 말해야 하는 숫자·고유명사·한계. demo contract와 실제 evidence에 있는 값만 넣는다.
+- `seconds`: `/pitch`의 시간 배분. 합계가 `hackathon.yaml`의 발표 시간을 넘으면 보고한다.
+
+마지막 슬라이드 뒤 `questions`에는 `/pitch`의 예상 질문과 답 요점을 넣는다.
+
+## 문체 수정 뒤 사실 범위 재검수
+
+문체를 다듬은 뒤, 렌더·게시 전에 [사실 범위 재검수](../../references/claim-scope-check.md)를 적용한다. 수치·조건·한계와 포괄 표현을 원문·고정 expected·실행 evidence에 대조하고, 미확인과 승인 범위를 보존한다.
+
+## 등록과 확인
+
+1. `tools/presenter/decks.js`에 한 줄을 추가한다(이름, 행사, `presenter.html` 기준 상대 경로). 다른 행사의 줄은 건드리지 않는다.
+2. Chrome에서 실제로 열어 확인한다: 목록에서 덱이 뜨는지, 폴더 업로드로도 뜨는지, 발표자 창과 청중 창이 →·← 양쪽에서 함께 넘어가는지, 이미지가 모두 보이는지.
+3. 확인하지 못한 항목은 미확인으로 보고한다. 자동 확인은 사람의 리허설을 대신하지 않는다.
+
+## 종료 게시 절차
+
+다른 command와 같다. 이 command가 만든 `output/presenter/` 파일과 `decks.js`의 해당 줄만 stage해 commit·push하고 원격 SHA를 확인한다.

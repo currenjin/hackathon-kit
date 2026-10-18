@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Presenter</title>
+<style>
+  :root { --bg: #0b0d11; --panel: #14181f; --line: #262c36; --text: #eef1f5; --muted: #98a2b3; --accent: #5b9bff; --warn: #f0b44c; --over: #ff6b63; --say: #dfe9ff; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text); font: 16px/1.5 -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; }
+  .app { display: grid; grid-template-columns: 1.35fr 1fr; grid-template-rows: auto 1fr; gap: 14px; height: 100%; padding: 14px; }
+  header { grid-column: 1 / -1; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  header .title { font-weight: 600; }
+  header .count { color: var(--muted); font-variant-numeric: tabular-nums; }
+  header .spacer { flex: 1; }
+  .clock { font: 600 22px ui-monospace, Menlo, monospace; font-variant-numeric: tabular-nums; }
+  .clock .slide { color: var(--muted); font-size: 16px; margin-left: 10px; }
+  .clock .slide.warn { color: var(--warn); } .clock .slide.over { color: var(--over); }
+  button { background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px; font: inherit; cursor: pointer; }
+  button.primary { background: var(--text); color: #0b0d11; border-color: var(--text); font-weight: 600; }
+  .left, .right { min-height: 0; display: flex; flex-direction: column; gap: 10px; }
+  .label { font-size: 13px; color: var(--muted); }
+  .frame { background: #000; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  .frame img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .current { flex: 1; min-height: 0; }
+  .next { height: 34%; min-height: 120px; }
+  .next.end { color: var(--muted); }
+  .script { flex: 1; min-height: 0; overflow: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; }
+  .script h2 { margin: 0 0 4px; font-size: 20px; }
+  .script .screen { color: var(--muted); font-size: 14px; margin-bottom: 12px; }
+  .script p { margin: 0 0 12px; font-size: 21px; line-height: 1.6; color: var(--say); }
+  .script .must { color: #6fe39a; font-weight: 600; }
+  .script .q { border-top: 1px solid var(--line); margin-top: 12px; padding-top: 10px; font-size: 15px; color: var(--muted); }
+  .help { font-size: 13px; color: var(--muted); }
+  .empty { padding: 40px; color: var(--muted); }
+  @media (max-width: 900px) { .app { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <header>
+    <span class="title" id="title">Presenter</span>
+    <span class="count" id="count"></span>
+    <span class="spacer"></span>
+    <span class="clock"><span id="total">00:00</span><span class="slide" id="slideTime"></span></span>
+    <button id="timer">Start timer</button>
+    <button id="reset">Reset timer</button>
+    <button class="primary" id="openAud">Open audience window</button>
+  </header>
+  <section class="left">
+    <div class="label">Now showing</div>
+    <div class="frame current" id="cur"></div>
+    <div class="label" id="nextLabel">Next</div>
+    <div class="frame next" id="nxt"></div>
+  </section>
+  <section class="right">
+    <div class="script" id="script"></div>
+    <div class="help">→ / Space / PageDown: next · ← / PageUp: previous · Home: first · T: timer · Audience window: click it (or press F) for full screen without the address bar</div>
+  </section>
+</div>
+<script>
+// Deck data: load with ?deck=<path to a JS file that sets window.DECK>.
+// window.DECK = { title, base?, slides: [{ img, title, screen, say: [..], must: [..], seconds }], questions?: [..] }
+(function () {
+  const params = new URLSearchParams(location.search);
+  const deckPath = params.get('deck');
+  const box = document.getElementById('script');
+  if (deckPath) {
+    const s = document.createElement('script');
+    s.src = deckPath;
+    s.onload = () => start(window.DECK, new URL(deckPath, location.href));
+    s.onerror = () => { box.innerHTML = '<div class="empty">Could not load ' + deckPath + '</div>'; };
+    document.head.appendChild(s);
+    return;
+  }
+  // No deck given: show the picker (registered decks + folder upload).
+  const reg = document.createElement('script');
+  reg.src = 'decks.js';
+  reg.onload = picker; reg.onerror = picker;
+  document.head.appendChild(reg);
+
+  function picker() {
+    const decks = window.DECKS || [];
+    const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    document.getElementById('cur').innerHTML = '';
+    document.getElementById('nxt').innerHTML = '';
+    box.innerHTML = '<h2>Choose a deck</h2>'
+      + (decks.length ? decks.map((d, k) => '<p><button class="primary" data-k="' + k + '">' + esc(d.name) + '</button> <span class="label">' + esc(d.event || '') + '</span></p>').join('') : '<p class="label">No registered decks in decks.js.</p>')
+      + '<div class="q"><b>Or upload a deck folder</b><br>Pick a folder that contains one deck data file (<code>*.js</code> setting <code>window.DECK</code>) and the slide images it names.<br><br><input type="file" id="dir" webkitdirectory multiple></div>';
+    box.querySelectorAll('[data-k]').forEach((b) => b.onclick = () => {
+      const d = decks[Number(b.dataset.k)];
+      location.search = '?deck=' + encodeURIComponent(d.path);
+    });
+    document.getElementById('dir').onchange = async (e) => {
+      const files = [...e.target.files];
+      const js = files.find((f) => /\.js$/i.test(f.name));
+      if (!js) { alert('No .js deck data file in that folder.'); return; }
+      const text = await js.text();
+      window.DECK = undefined;
+      try { new Function(text)(); } catch (err) { alert('Deck file error: ' + err.message); return; }
+      const deck = window.DECK;
+      if (!deck || !Array.isArray(deck.slides)) { alert('The file did not set window.DECK.slides.'); return; }
+      const byName = new Map(files.map((f) => [f.name, f]));
+      for (const sl of deck.slides) {
+        const f = byName.get(String(sl.img).split('/').pop());
+        if (f) sl.img = URL.createObjectURL(f);
+      }
+      deck.base = undefined;
+      start(deck, new URL(location.href));
+    };
+  }
+})();
+
+function start(deck, deckUrl) {
+  const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const base = new URL(deck.base || '.', deckUrl);
+  const src = (img) => (/^(blob:|data:)/.test(img) ? img : new URL(img, base).href);
+  const slides = deck.slides;
+  let i = Math.max(0, Math.min(slides.length - 1, Number(new URLSearchParams(location.search).get('slide') || 1) - 1));
+  let aud = null;
+  let running = false, startedAt = 0, elapsed = 0, slideStart = 0;
+
+  document.getElementById('title').textContent = deck.title || 'Presenter';
+  document.title = (deck.title || 'Presenter') + ' · Presenter';
+
+  // Preload images so slide changes are instant on the projector.
+  slides.forEach((sl) => { const im = new Image(); im.src = src(sl.img); });
+
+  function renderAudience() {
+    if (!aud || aud.closed) return;
+    const d = aud.document;
+    if (!d.getElementById('slide')) {
+      d.open();
+      d.write('<!doctype html><html><head><meta charset="utf-8"><title>' + esc(deck.title || 'Slides') + '</title><style>html,body{margin:0;height:100%;background:#000;overflow:hidden}img{width:100%;height:100%;object-fit:contain;display:block}:fullscreen,:fullscreen *{cursor:none}#hint{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:rgba(20,24,31,.92);color:#eef1f5;font:500 18px -apple-system,sans-serif;padding:12px 20px;border-radius:999px;transition:opacity .4s}:fullscreen #hint{opacity:0}</style></head><body><img id="slide" alt=""><div id="hint">Click anywhere or press F for full screen (no address bar)</div></body></html>');
+      d.close();
+      const full = () => {
+        if (d.fullscreenElement || d.webkitFullscreenElement) return;
+        const el = d.documentElement;
+        const req = el.requestFullscreen || el.webkitRequestFullscreen;
+        if (req) { const r = req.call(el); if (r && r.catch) r.catch(() => {}); }
+      };
+      d.addEventListener('click', full);
+      d.addEventListener('dblclick', full);
+      // e.code works with any keyboard layout (Korean IME sends "ㄹ" as e.key for F).
+      aud.addEventListener('keydown', (e) => { if (e.code === 'KeyF' || e.key === 'f' || e.key === 'F') full(); else onKey(e); });
+      setTimeout(() => { const h = d.getElementById('hint'); if (h) h.style.opacity = '0'; }, 6000);
+    }
+    const el = d.getElementById('slide');
+    el.src = src(slides[i].img);
+    el.alt = slides[i].title || '';
+  }
+
+  function render() {
+    const sl = slides[i], nx = slides[i + 1];
+    document.getElementById('count').textContent = (i + 1) + ' / ' + slides.length;
+    document.getElementById('cur').innerHTML = '<img src="' + esc(src(sl.img)) + '" alt="">';
+    const n = document.getElementById('nxt');
+    if (nx) { n.classList.remove('end'); n.innerHTML = '<img src="' + esc(src(nx.img)) + '" alt="">'; document.getElementById('nextLabel').textContent = 'Next · ' + (i + 2) + ' ' + (nx.title || ''); }
+    else { n.classList.add('end'); n.innerHTML = '<div class="empty">End of deck</div>'; document.getElementById('nextLabel').textContent = 'Next'; }
+    const must = (sl.must || []).map((m) => '<span class="must">' + esc(m) + '</span>').join(' · ');
+    let html = '<h2>' + (i + 1) + '. ' + esc(sl.title || '') + (sl.seconds ? ' <span class="label">' + sl.seconds + 's</span>' : '') + '</h2>';
+    if (sl.screen) html += '<div class="screen">' + esc(sl.screen) + '</div>';
+    html += (sl.say || []).map((p) => '<p>' + esc(p) + '</p>').join('');
+    if (must) html += '<div class="q">Say exactly: ' + must + '</div>';
+    if (i === slides.length - 1 && deck.questions && deck.questions.length) {
+      html += '<div class="q"><b>Q&amp;A</b><br>' + deck.questions.map((q) => esc(q)).join('<br>') + '</div>';
+    }
+    document.getElementById('script').innerHTML = html;
+    document.getElementById('script').scrollTop = 0;
+    renderAudience();
+    tick();
+  }
+
+  function go(k) { const j = Math.max(0, Math.min(slides.length - 1, k)); if (j !== i) { i = j; slideStart = now(); render(); } }
+  function now() { return running ? elapsed + (Date.now() - startedAt) : elapsed; }
+  function fmt(ms) { const t = Math.floor(ms / 1000); return String(Math.floor(t / 60)).padStart(2, '0') + ':' + String(t % 60).padStart(2, '0'); }
+  function tick() {
+    const t = now();
+    document.getElementById('total').textContent = fmt(t);
+    const sl = slides[i], st = t - slideStart;
+    const el = document.getElementById('slideTime');
+    el.textContent = 'slide ' + fmt(st) + (sl.seconds ? ' / ' + fmt(sl.seconds * 1000) : '');
+    el.className = 'slide' + (sl.seconds && st > sl.seconds * 1000 ? ' over' : sl.seconds && st > sl.seconds * 800 ? ' warn' : '');
+  }
+  setInterval(tick, 250);
+
+  function onKey(e) {
+    if (['ArrowRight', ' ', 'PageDown', 'Enter'].includes(e.key)) { e.preventDefault(); go(i + 1); }
+    else if (['ArrowLeft', 'PageUp', 'Backspace'].includes(e.key)) { e.preventDefault(); go(i - 1); }
+    else if (e.key === 'Home') go(0);
+    else if (e.key === 'End') go(slides.length - 1);
+    else if (e.code === 'KeyT' || e.key === 't' || e.key === 'T') toggleTimer();
+  }
+  function toggleTimer() {
+    if (running) { elapsed += Date.now() - startedAt; running = false; }
+    else { startedAt = Date.now(); running = true; }
+    document.getElementById('timer').textContent = running ? 'Pause timer' : 'Start timer';
+  }
+  document.addEventListener('keydown', onKey);
+  document.getElementById('timer').onclick = toggleTimer;
+  document.getElementById('reset').onclick = () => { running = false; elapsed = 0; slideStart = 0; document.getElementById('timer').textContent = 'Start timer'; tick(); };
+  document.getElementById('openAud').onclick = () => {
+    aud = window.open('', 'presenter-audience', 'width=1280,height=720');
+    if (!aud) { alert('Allow pop-ups for this page to open the audience window.'); return; }
+    renderAudience();
+    aud.focus();
+  };
+  window.addEventListener('beforeunload', () => { if (aud && !aud.closed) aud.close(); });
+  render();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+event:
+  name: ""
+  url: ""
+  date: ""
+  timezone: ""            # IANA 이름. 예: Asia/Seoul
+  duration_hours:
+  pitch_minutes: null     # 공식 안내 시간(분). 미확인은 null; 준비 기본 60초와 구분
+
+presentation:
+  effective_seconds: 60  # 공식값 > 출처 있는 사용자 확인 목표 > 기본60초. 사용자 범위 안에서 목표 선택
+  source: user-default   # 기본값/사용자 확인 원문/공식 안내 식별자. 사용자 확인을 official로 승격하지 않음
+  timing_status: provisional # provisional | user-confirmed | user_confirmed_range | official
+  # allowed_range_seconds: [180, 240] # 사용자 확인 범위가 있을 때만. 과거 행사 일괄 추가 금지
+  # selection_status: pending       # 선정 후 발표하는 행사에만 기록. 제출 완료와 구분
+  qa_mode: unknown       # unknown | included | separate | none. 공식/사용자 확인으로 없을 때만 none
+  qa_seconds: null       # none이면 0; 그 외 확인된 배정만 기록, included면 유효시간 안에서 차감
+  status: pending        # pending | dirty | ready. 조건 변경 후 재검수 전 dirty
+  review:
+    active_version: null       # 발표 기준 iteration의 workspace 기준 상대 경로. 승인 전은 null
+    status: pending            # pending | in_review | approved | superseded. 명시 전 결정하지 않음
+    reviewed_at: null          # ISO8601. 사용자 승인 시점만 기록
+    superseded_versions: []    # 이전 iteration 상대 경로 목록. kept는 포함하지 않음
+# 시간/Q&A 원문·확인일·변경 이력은 notes 또는 adaptation.md에 보존. Q&A 출처는 official/user-confirmed 구분.
+# 기존 workspace는 일괄 migration하지 않음. 해석 규칙: references/presentation-reference-guide.md
+# review 필드가 비어 있는 기존 workspace도 자동 migration하지 않는다. 해당 행사에서 명시로 결정될 때만 채운다.
+
+submission:
+  url: ""
+  deadline: ""            # timezone offset 포함. 예: 2026-01-31T17:00+09:00
+  source: ""              # 마감을 확인한 공식 링크
+  status: ""              # draft | submitted_user_confirmed(사용자 보고) | submitted(접수 직접 확인)
+
+judging: []
+
+sponsor_requirement:
+  level: unknown          # required | judged | optional | none | unknown
+  source: ""              # 판단 근거가 된 공식 rules 링크
+
+sponsors: []
+# - name: ""
+#   requirement: unknown    # required | judged | optional | none | unknown. 생략 시 행사 기본값 적용
+#   requirement_source: ""  # sponsor별 공식 rules 링크
+#   used: null            # 채택 결정: true 사용 / false 명시적 제외 / null·누락 미정. 실사용 증거 아님
+#   role: ""              # 제품 경로에서 맡는 역할
+#   note: ""              # 결정 이유. 실사용은 preparation.md·adaptation.md 및 실행 evidence로 확인
+
+language:
+  presenter: ko
+  audience: [ko, en]
+  deck: [ko, en]
+  submission: [en, ko]
+  public_guide: [en, ko]   # /pitch → output/guide/<lang>.md (workspace 기준)
+
+build_policy:
+  mode: restricted-preparation # prebuild-permitted | on-site-build-only | restricted-preparation
+  source: ""                  # 실제 확인한 공식 원문 위치만
+  checked_at: null
+  starts_at: null              # 공식 제작 시작, timezone offset 포함
+  ends_at: null                # 공식 제작 종료, timezone offset 포함
+  code_reuse: unknown          # allowed | forbidden | unknown. 아이디어 적합성과 별개
+  pre_event:                  # 행위별 출처·범위는 notes. 누락도 unknown
+    planning: unknown
+    design: unknown
+    prompt: unknown
+    data: unknown
+    criteria: unknown
+    code: unknown
+    deck: unknown
+    pitch: unknown
+    submission: unknown
+
+strategy:
+  prefer_existing_product: false # 기존 제품도 조사하되 새 규칙에 따라 동등 재평가
+  ideation_limit_minutes: 30
+  feature_freeze_before_minutes: 45
+
+product:
+  repository: ""          # Git 제품 위치. hosted app만 쓰면 비워둔다
+  hosted_app: ""          # 실제 앱 위치. 미생성/미확인이면 비워둔다
+  owner: ""               # hosted app 소유 계정의 비민감 별칭. 권한·복구 방법은 preparation.md에 기록
+  name: ""                # 확정 제품명. 미확정이면 비워두고 임시 코드명을 쓸 수 있다. 코드명 사용 시 ideation.md/notes에 코드명과 재명명 영향범위 기록. 과거 행사의 일괄 rename은 하지 않는다
+
+demo_contract: ""         # /demo가 채운다. workspace 기준 상대 경로
+
+public_links:              # 공개·접수 확인 후 실제 URL만 채운다. 미확인 값은 비워둔다
+  demo: ""
+  slides: ""
+  guide: ""
+  submission: ""
+
+notes: []
