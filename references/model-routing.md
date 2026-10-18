@@ -39,8 +39,8 @@
 | 커버 이미지·표지 등 시각 자산 | GPT (이미지 생성. Claude가 준 프롬프트와 실제 제품 렌더를 참고 이미지로 사용) | Claude: 프롬프트 작성(카피 원문·실제 수치·색·쓰지 말 것), 결과의 글자·숫자가 사실과 맞는지 검수 | 최종 이미지 선택 |
 | `/submit` draft | Claude (실제 폼에 맞춘 초안) | GPT: 필수 필드·글자 수·링크·검증 결과와의 일치. Gemini·Antigravity: 심사 기준 관점 문장 다듬기(선택) | 실제 제출 |
 | `/preflight` final | GPT (제품·영상·제출·덱 최종 대조) | Claude: 지적된 부분 수정, 수정한 곳은 다시 검수 | |
-| `/retro` | Claude + 사용자 | GPT: 반복 실패나 kit 변경안을 볼 때만 | 소감과 교훈(사용자가 말한 것만) |
-| `/archive` | Claude (URL·접수 근거·저장 상태 확인) | | |
+| `/retro` | Claude (기존 workspace·evidence·결과 보고로 사실 기록 정리) | GPT: 반복 실패나 kit 변경안을 볼 때만 | 대상 행사 확인·재사용 규칙 변경 승인. 소감·인터뷰는 필수 아님 |
+| `/archive` | Claude (URL·접수 근거·저장 상태 확인) | | 대상 행사·운영 조치 승인. 소감 gate 없음 |
 | `/replan` | Claude (전체 재평가 정리) | Gemini: 내부 /init 재확인. GPT: 달라진 근거와 자격 | 새 선택 |
 | `/decide`, `/humanize`, `/onboard` | Claude | | |
 

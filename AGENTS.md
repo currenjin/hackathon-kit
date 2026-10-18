@@ -96,7 +96,7 @@
 | `/present` | `/deck` 렌더 이미지, 같은 언어의 `/pitch` 대본 | `output/presenter/<lang>/`(deck.js + 슬라이드 이미지), `tools/presenter/decks.js` 한 줄 |
 | `/submit` | 제출 폼, demo contract, deck | `output/submission/` draft |
 | `/preflight` final | 모든 산출물, 제품 실행 결과 | `preflight-final.md` |
-| `/retro` | workspace 전체 | `retro.md`, `hackathon.yaml`의 `result` |
+| `/retro` | 기존 workspace와 evidence, 결과·발표 사용자 보고(있는 범위) | `retro.md`, `hackathon.yaml`의 `result` |
 | `/archive` | workspace, 확인된 제출·공개 링크 | `hackathon.yaml`의 `public_links`, `references/` |
 
 demo contract는 고정 파일명을 쓰지 않는다. 아래 순서로 찾는다.
@@ -165,6 +165,10 @@ deck, pitch, public guide, submission의 수치와 결과는 위 검증을 통�
 
 ## 종료 후
 
-`/retro`는 현재 행사 workspace에 상세 회고를 남긴다.
+`/retro`는 현재 행사 workspace에 사실 기반 작업 회고를 남긴다. 입력은 기존 workspace와 evidence, 결과·발표 사용자 보고이며, 있는 근거만 사용한다. 소감·감정·감사·성장·개인적인 의미를 묻거나 필수 인터뷰를 시작하지 않는다. 개인 소감은 사용자의 별도 요청이 있을 때만 다룬다.
+
+소감 입력이 없거나 사용자가 거절해도 빈 감상 섹션이나 `reflection_pending`을 만들지 않으며 `/retro`·`/archive`를 대기·부분완료로 낮추지 않는다. 사실의 누락은 추정하지 않고 미확인으로, 실제 해당하지 않는 항목만 근거와 함께 비해당으로 기록한다. 본문은 결과·제품·결정과 근거·실행·검증·확인된 문제와 미검증·후속작업·링크를 간결히 정리한다. 근거 있는 작업상 회고와 선택은 남긴다.
+
+사용자 제공 원문과 과거 기록은 삭제하지 않는다. 본문을 사실 중심으로 정리할 때 필요하면 별도 source로 원문을 보존하되, 기존 접근 경계를 유지하고 개인·민감 원문을 공개 kit으로 복사하지 않는다. [기록 완료와 운영 종료](references/field-status-and-closeout.md#기록-완료와-운영-종료)를 구분하며, 기록 완료는 제품 PASS·실제 제출·운영 종료 확인을 뜻하지 않는다. 대상 행사·소유 경계·작업 승인·실제 검증 요건은 그대로 유지한다.
 
 `/archive`는 직접 참가한 행사 링크를 `references/my-hackathons.md`에 추가한다. 수상작은 `references/winners.md`, 일반 출품작과 gallery는 `references/submissions.md`에 둔다. workspace는 삭제하지 않는다.
