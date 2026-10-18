@@ -9,6 +9,7 @@
 - public guide는 기존 `/pitch`가 `workspace/<event-slug>/output/guide/<lang>.md`에 작성한다. 파일 생성만으로 공개했다고 기록하지 않는다.
 - 발표 언어와 청중 언어가 다르면 `public_guide`를 우선 준비한다.
 - 여러 언어를 한 화면에 섞기보다 언어별 section이나 artifact로 분리한다.
+- 언어가 섞인 채팅 채널에 덱을 공유할 때는 한 PDF에 발표 언어 구간을 먼저, 다른 언어 구간을 뒤에 붙이고 표지에 쪽 범위를 적는다(예: "English version · p.8–14"). 공유 문구에도 쪽 범위를 적는다.
 
 ## Writing rules
 
