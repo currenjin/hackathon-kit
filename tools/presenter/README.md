@@ -10,6 +10,8 @@ Two-window slide presenter. One window shows only the slide (send it to the proj
 4. Click **Open audience window**, drag that window to the projector, then click anywhere in it (or press **F**). This uses page full screen, which hides the address bar; the macOS green button does not.
 5. Drive from the presenter window: → / Space next, ← previous, T timer.
 
+To share one browser window that holds both the slides and a live demo, click **Open audience as tab** instead. Drag that tab out into its own window, open the demo in another tab of the same window, and share that window. Switching tabs switches what the audience sees; the presenter window still drives the slides.
+
 ## Deck data
 
 ```js
@@ -22,6 +24,8 @@ window.DECK = {
   questions: ['Why X? → short answer'],  // shown on the last slide
 };
 ```
+
+Add `demo: 'http://…'` to a slide to show a live page in the audience window instead of the image. The page stays loaded while you move between slides, and you operate it by clicking inside the audience window.
 
 `must` lists facts or numbers that have to be said exactly. `seconds` is the target time; the slide timer turns amber at 80% and red when over.
 

@@ -46,6 +46,7 @@
     <button id="timer">Start timer</button>
     <button id="reset">Reset timer</button>
     <button class="primary" id="openAud">Open audience window</button>
+      <button class="primary" id="openAudTab" title="Open as a tab so you can drag it next to your demo tab and share one window">Open audience as tab</button>
   </header>
   <section class="left">
     <div class="label">Now showing</div>
@@ -131,7 +132,7 @@ function start(deck, deckUrl) {
     const d = aud.document;
     if (!d.getElementById('slide')) {
       d.open();
-      d.write('<!doctype html><html><head><meta charset="utf-8"><title>' + esc(deck.title || 'Slides') + '</title><style>html,body{margin:0;height:100%;background:#000;overflow:hidden}img{width:100%;height:100%;object-fit:contain;display:block}:fullscreen,:fullscreen *{cursor:none}#hint{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:rgba(20,24,31,.92);color:#eef1f5;font:500 18px -apple-system,sans-serif;padding:12px 20px;border-radius:999px;transition:opacity .4s}:fullscreen #hint{opacity:0}</style></head><body><img id="slide" alt=""><div id="hint">Click anywhere or press F for full screen (no address bar)</div></body></html>');
+      d.write('<!doctype html><html><head><meta charset="utf-8"><title>' + esc(deck.title || 'Slides') + '</title><style>html,body{margin:0;height:100%;background:#000;overflow:hidden}img{width:100%;height:100%;object-fit:contain;display:block}#demo{position:fixed;inset:0;width:100%;height:100%;border:0;display:none;background:#000}:fullscreen,:fullscreen *{cursor:none}#hint{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:rgba(20,24,31,.92);color:#eef1f5;font:500 18px -apple-system,sans-serif;padding:12px 20px;border-radius:999px;transition:opacity .4s}:fullscreen #hint{opacity:0}</style></head><body><img id="slide" alt=""><iframe id="demo" title="Live demo" allow="clipboard-write; fullscreen"></iframe><div id="hint">Click anywhere or press F for full screen (no address bar)</div></body></html>');
       d.close();
       const full = () => {
         if (d.fullscreenElement || d.webkitFullscreenElement) return;
@@ -145,9 +146,17 @@ function start(deck, deckUrl) {
       aud.addEventListener('keydown', (e) => { if (e.code === 'KeyF' || e.key === 'f' || e.key === 'F') full(); else onKey(e); });
       setTimeout(() => { const h = d.getElementById('hint'); if (h) h.style.opacity = '0'; }, 6000);
     }
-    const el = d.getElementById('slide');
-    el.src = src(slides[i].img);
-    el.alt = slides[i].title || '';
+    const el = d.getElementById('slide'), fr = d.getElementById('demo');
+    const demo = slides[i].demo;
+    if (demo) {
+      // the live demo stays loaded, so leaving and coming back keeps its state
+      if (fr.dataset.url !== demo) { fr.src = demo; fr.dataset.url = demo; }
+      fr.style.display = 'block'; el.style.display = 'none';
+    } else {
+      fr.style.display = 'none'; el.style.display = 'block';
+      el.src = src(slides[i].img);
+      el.alt = slides[i].title || '';
+    }
   }
 
   function render() {
@@ -202,6 +211,12 @@ function start(deck, deckUrl) {
   document.getElementById('openAud').onclick = () => {
     aud = window.open('', 'presenter-audience', 'width=1280,height=720');
     if (!aud) { alert('Allow pop-ups for this page to open the audience window.'); return; }
+    renderAudience();
+    aud.focus();
+  };
+  document.getElementById('openAudTab').onclick = () => {
+    aud = window.open('', 'presenter-audience');
+    if (!aud) { alert('Allow pop-ups for this page to open the audience tab.'); return; }
     renderAudience();
     aud.focus();
   };
