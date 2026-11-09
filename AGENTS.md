@@ -42,6 +42,12 @@
 5. 제품 UI와 deck의 시각 방향은 `.claude/rules/design.md`를 따른다.
 6. sponsor를 붙이기 전에 공식 문서에서 인증, 가격, quota, API/SDK 제약을 확인한다.
 
+## 참가 방식과 역할
+
+모든 command와 새 세션은 [참가 방식과 본인 역할](references/team-participation.md)을 적용한다. 팀 행사에서는 현재 행사·본인 연결을 확인하고 매 command마다 본인의 `members/<member-id>.yaml` 정본을 다시 읽는다. 주 역할은 우선순위이며 전체 목표·공유 명세·통합을 확인하고 다른 역할에도 기여할 수 있지만 저장된 역할은 명시 요청 없이 바꾸지 않는다.
+
+`hackathon.yaml`에는 참가 방식만 공유하며 현재 회원 연결은 세션 안에만 둔다. 새 세션·본인 미확정 시 `/onboard`의 선택 절차를 따르고, 누락된 참가 방식은 unknown으로 유지한다. `/onboard`는 읽기 전용을 기본으로 하되 확인된 팀의 신규 본인 등록에만 좁은 쓰기 예외를 적용하며 종료된 행사 열람은 그대로 읽기 전용이다.
+
 ## 저장 위치
 
 - 재사용 규칙: `.claude/rules/`
@@ -82,8 +88,8 @@
 
 | Command | 읽는 것 | 쓰는 것 |
 | --- | --- | --- |
-| `/onboard` | kit 규칙, 끝나지 않은 workspace 목록(사용자 선택), 선택한 workspace 전체와 git log | 브리핑(요청 시 `onboarding-<date>.md`) |
-| `/init` | 공식 행사 페이지와 rules, `templates/hackathon.yaml` | `hackathon.yaml` |
+| `/onboard` | kit 규칙, 끝나지 않은 workspace 목록(사용자 선택), 선택한 workspace 전체와 git log | 브리핑(요청 시 `onboarding-<date>.md`), 응답 후 신규 본인 `members/<member-id>.yaml` |
+| `/init` | 공식 행사 페이지와 rules, `templates/hackathon.yaml` | `hackathon.yaml`, 팀 응답 후 신규 본인 `members/<member-id>.yaml` |
 | `/ideate` | `hackathon.yaml`, `products.md`, `references/` | `hackathon.yaml`의 `product`, `ideation.md`(필요하면) |
 | `/design` | `hackathon.yaml`, 제품 위치(초안은 미정 가능) | `design.md`, 승인된 제품 UI |
 | `/demo` pre-event | `hackathon.yaml`, `design.md`(있으면), 제품과 독립된 명세·손 계산 등 | demo contract의 expected·출처·control, `hackathon.yaml`의 `demo_contract` |

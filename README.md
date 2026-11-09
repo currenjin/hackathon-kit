@@ -6,6 +6,18 @@
 
 제품 자체는 각 Git 저장소 또는 소유 계정이 확인된 hosted app에서 개발한다. `hackathon-kit`은 행사 선택, sponsor 준비, demo, deck, pitch, submission, 회고를 돕는다.
 
+## 개인·팀 시작
+
+개인 참가도 기존 흐름을 그대로 사용한다. `/init`은 개인/팀을 먼저 묻고 팀일 때만 주 역할을 묻는다. 역할은 프론트엔드 개발·백엔드 개발 또는 같은 질문의 native 자유 입력으로 정하며, 인원수나 전체 명단은 필수가 아니다.
+
+이 공개 프레임워크는 GitHub template으로 사용할 기본 구성이다. 저장소에서 **Use this template**이 활성화되어 있으면 각 팀 소유의 **private** 사본을 만들고 팀원마다 그 사본을 clone한다. 현재 template 등록 완료를 뜻하지 않으며 버튼이 없으면 소유자가 활성화한 뒤 사용한다.
+
+clone만 하면 기존 remote에 연결된 로컬 복사본이 생기고 별도 팀 저장소는 생기지 않는다. 개인 kit의 이력을 가져오지 않으며 행사 설정·회원별 역할·결정은 팀 사본에서 공유한다. credential·host 대화·현재 회원 선택은 Git에 넣지 않는다.
+
+새 세션의 `/onboard`에서 본인 기록을 선택하고 매 command가 정본 역할을 다시 읽는다. 본인 선택은 세션 안에만 유지하며 주 역할 외의 작업도 가능하다. [참가 방식과 본인 역할](references/team-participation.md)에 질문 분기·기존 행사 호환·저장 CLI와 검증 범위를 정리했다.
+
+팀 회원 저장 도구는 macOS/Linux용이며 **Windows 팀원은 WSL에서 사용**한다. native Windows Python은 지원하지 않는다. [실행 환경 안내](references/team-participation.md#실행-환경)를 먼저 확인하며 WSL 설치나 환경 변경은 자동 수행하지 않는다.
+
 ## Workspace
 
 행사별 작업은 `workspace/<event-slug>/`에 저장한다.

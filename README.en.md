@@ -36,16 +36,28 @@ When the rules only allow building on site, planning and design happen before th
 | `.claude/rules/` | Writing (Korean/English), language and design rules |
 | `references/` | Workflow policy, readiness gates, model routing, and your own lists of winners, submissions and past events (empty templates) |
 | `templates/` | `hackathon.yaml` and handoff templates |
-| `tools/` | Presenter view and a read-only workflow checker |
+| `tools/` | Presenter view, a read-only workflow checker and the member persistence CLI |
 | `workspace/` | Your events. Empty in this repository |
 
 ## Getting started
 
-1. Fork or copy this repository. Keep your fork private if you will commit event workspaces.
+1. When **Use this template** is enabled, create your own private team repository from this public baseline, then clone that team copy on each machine. Template registration is not claimed here; if the button is absent, the owner must enable it first.
 2. Open it in Claude Code and run `/init <event URL>`.
 3. Follow the suggested next command.
 
 Tests: `python3 -m unittest discover -s tests` (needs PyYAML).
+
+## Individual and team participation
+
+Individual participation keeps the existing workflow. `/init` asks individual or team first; only teams get the main-role question, with frontend/backend choices and native free-form input in the same question. No headcount or full roster is required.
+
+Cloning creates a local checkout of the existing remote, not a new team repository. Share event metadata, per-member role records and decisions in your private team copy; never import personal kit history. Keep credentials, host conversations and the selected-member session binding out of Git.
+
+In a new session, `/onboard` lets you select your own record or register a new one. Every command re-reads your canonical role record; the current identity binding stays only in the session. Your main role sets priorities while allowing contributions across roles, and existing records change only on an explicit role-edit request.
+
+Missing legacy participation mode remains unknown, and historical onboarding remains read-only. See the [participation contract](references/team-participation.md) for native question fallbacks, identity confirmation and the persistence CLI. CLI tests exercise file operations; static command tests do not verify native interactive UI.
+
+The team member persistence CLI runs on macOS/Linux. **Windows teammates must use WSL**; native Windows Python is not supported. Follow the [execution environment instructions](references/team-participation.md#실행-환경) before team registration. The kit does not install WSL or change system settings automatically, and macOS tests are not a Windows/WSL execution receipt.
 
 ## License
 

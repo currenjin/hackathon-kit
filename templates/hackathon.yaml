@@ -1,3 +1,6 @@
+participation:
+  mode: unknown           # individual | team | unknown. /init 응답만 기록; 개인 역할·현재 회원은 저장하지 않음
+
 event:
   name: ""
   url: ""

@@ -42,6 +42,12 @@ description: 행사 workspace를 초기화하거나 같은 행사의 공식 조�
 
 같은 slug 폴더가 이미 있으면 `hackathon.yaml`의 `event.url`, `event.date`를 비교한다. 일반 초기화는 같은 행사의 빈 항목만 채운다. 재확인 모드(직접 요청 또는 승인된 `/replan` 내부)는 빈칸만 채우는 규칙의 예외다. URL·날짜가 같은 현재 workspace를 유지하고 실제 확인된 변경값·이전값·출처·확인 시각·변경 이유를 notes/기존 sources에 보존하며 갱신한다. 미확인 새 값으로 기존 확인값을 덮지 않는다. 행사 식별 자체가 달라지면 확인 전 새 폴더나 행사로 전환하지 않는다. 다른 행사와 종료된 기록은 수정하지 않는다.
 
+## 참가 방식
+
+현재 행사에 참가 방식이 없거나 unknown이면 **이번 해커톤은 어떻게 참가하나요?**를 단일 선택 `개인 / 팀`으로 묻는다. `participation.mode`에 `individual / team`을 기록하며 개인은 역할 질문을 건너뛴다. 확인된 기존 값은 보존하고 변경 요청 없이 다시 정하지 않는다.
+
+참가 방식 응답 뒤 팀일 때만 [참가 방식과 본인 역할](../../references/team-participation.md)의 동일 역할 질문·native 자유 입력·본인 확인 절차를 적용한다. 먼저 실행 환경도 확인하며 Windows에서는 WSL의 Linux 환경을 안내하고 native Windows Python으로 저장 CLI를 실행하지 않는다. 해당 문서의 CLI로 실제 회원 목록을 읽고 신규 본인 기록을 등록하며, 이미 본인 기록이 있으면 `/onboard`의 기존 기록 선택 절차를 적용한다. 참가 인원·전체 명단·역량·시간·도구 설문은 필수로 요구하지 않는다.
+
 ## 레퍼런스의 적용 범위
 
 [조건부 스타터 목록](../../references/starter-references.md)은 공식 행사 규칙을 대신하지 않는다. sponsor의 공식 문서·인증·quota·발급 시점 조사 결과는 후속 /prepare가 [최초 호출 안내](../../references/delivery-handoffs.md)를 작성할 수 있게 현재 workspace에 출처와 확인 범위를 남긴다. 조사만으로 sponsor 채택·도구 설치·호출·제품 제작을 승인하지 않는다.
