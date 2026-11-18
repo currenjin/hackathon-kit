@@ -50,4 +50,4 @@ description: /deck 슬라이드와 /pitch 대본을 발표자 도구(tools/prese
 
 ## 종료 게시 절차
 
-다른 command와 같다. 이 command가 만든 `output/presenter/` 파일과 `decks.js`의 해당 줄만 stage해 commit·push하고 원격 SHA를 확인한다.
+[게시 권한](../../references/workflow-policy.md#게시-권한)에서 확인한 승인 범위를 적용한다. 승인된 경우에만 이 command가 만든 `output/presenter/` 파일과 `decks.js`의 해당 줄을 stage해 commit·push하고 원격 SHA를 확인한다. 미승인 게시만 보류하며 파일 생성이나 템플릿 사용을 게시 승인으로 간주하지 않는다.

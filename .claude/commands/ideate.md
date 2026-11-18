@@ -6,7 +6,7 @@ description: 심사 기준과 기존 제품, 과거 사례를 기준으로 해�
 
 ## 종료 게시 절차
 
-종료 시 사용자 재승인 없이 상시 승인된 이번 command의 검증된 변경만 게시한다. kit 기록과 제품 repo를 분리하고 각 저장소의 명시 경로·hunk만 stage한 뒤 staged diff를 검수해 commit·push한다(`git add .`/`-A` 금지). 기존 index와 다른 스레드 작업, secret·개인정보·개인사진·권한 없는 원본·생성 캐시는 제외하며 분리할 수 없으면 보류한다. 변경이 없으면 빈 commit을 만들지 않는다. 제한·충돌·실패 시 변경을 보존하고 게시 대기 범위와 이유를 보고한다. 대상 remote branch SHA를 readback해 로컬 commit SHA와 대조하고 종료 보고에 저장소별 SHA·push 상태를 포함한다. tag, reset, force push, branch 생성·삭제, 공개 전환과 앱 복원은 별도 승인이 필요하다. 이 절차는 구현·외부 제출이나 다음 command 실행의 포괄 승인이 아니다.
+종료 시 [게시 권한](../../references/workflow-policy.md#게시-권한)에서 확인한 승인 범위 안의 이번 command 검증 변경만 게시한다. 승인 미확인이면 허용된 로컬 작업은 계속하고 stage·commit·push만 보류하며, 템플릿을 승인 근거로 쓰지 않는다. kit 기록과 제품 repo를 분리하고 각 저장소의 명시 경로·hunk만 stage한 뒤 staged diff를 검수해 commit·push한다(`git add .`/`-A` 금지). 기존 index와 다른 스레드 작업, secret·개인정보·개인사진·권한 없는 원본·생성 캐시는 제외하며 분리할 수 없으면 보류한다. 변경이 없으면 빈 commit을 만들지 않는다. 제한·충돌·실패 시 변경을 보존하고 게시 대기 범위와 이유를 보고한다. 대상 remote branch SHA를 readback해 로컬 commit SHA와 대조하고 종료 보고에 저장소별 SHA·push 상태를 포함한다. tag, reset, force push, branch 생성·삭제, 공개 전환과 앱 복원은 별도 승인이 필요하다. 이 절차는 구현·외부 제출이나 다음 command 실행의 포괄 승인이 아니다.
 
 ## 실행 표시
 
@@ -86,8 +86,8 @@ description: 심사 기준과 기존 제품, 과거 사례를 기준으로 해�
 - 구현 리스크
 - reference에서 확인한 유사점과 차이
 
-사용자가 방향을 고르면 현재 행사 workspace의 `hackathon.yaml`에 선택한 제품 또는 아이디어를 기록한다. sponsor 채택 결정은 `AGENTS.md`의 Sponsor 사용 조건에 따라 `used: true/false/null`과 이유로 적는다. null·누락은 미정이지 제외나 N/A가 아니며, 채택은 실제 사용 evidence가 아니다. 제품 방향 선택을 실제 구현 승인으로 확대하지 않는다.
+팀 행사에서는 [제품 결정의 적용 범위](../../references/team-participation.md#제품-결정의-적용-범위)에 따라 개인 검토안과 팀 채택을 구분한다. 적용 범위가 모호할 때만 확인하고 명확한 팀 결정 전달을 반복 확인하거나 전원 동의를 요구하지 않는다. 개인 검토안은 기존 ideation/notes에 출처·시각·팀 채택 대기로 남기며 공유 `product`를 덮어쓰지 않는다. 개인 행사에서는 사용자 선택, 팀 행사에서는 팀 채택 전달로 확인된 범위만 현재 행사 `hackathon.yaml`의 제품 결정에 기록한다. sponsor 채택 결정은 `AGENTS.md`의 Sponsor 사용 조건에 따라 `used: true/false/null`과 이유로 적는다. null·누락은 미정이지 제외나 N/A가 아니며, 채택은 실제 사용 evidence가 아니다. 제품 방향 선택을 실제 구현 승인으로 확대하지 않는다.
 
-선택 확정과 함께 제품명을 결정하도록 유도한다. 종료 시 1~3개의 임시 제품명 안을 짧은 근거와 함께 제시하고 사용자가 하나를 고르게 한다. 사용자가 결정하면 `hackathon.yaml`의 `product.name`에 기록한다. 결정이 늦어지면 임시 코드명을 명시해 `product.name`에 넣고, 재명명 시 영향 범위(제품 저장소/화면/문서/덱/제출 폼 중 해당 항목)를 `ideation.md` 또는 `hackathon.yaml` notes에 기록해 이후 `/adapt`·`/retro`에서 추적한다. `AGENTS.md`의 저장소 이름 규칙(행사명+날짜)과 설명 규칙은 유지하고 과거 행사의 일괄 rename은 하지 않는다.
+선택 확정과 함께 제품명을 결정하도록 유도한다. 확정명·임시 코드명 기록 모두 위 제품 결정의 적용 범위에 종속된다. 종료 시 1~3개의 임시 제품명 안을 짧은 근거와 함께 제시하고 사용자가 하나를 고르게 한다. 개인 행사에서는 사용자 선택, 팀 행사에서는 팀 채택 전달로 확인된 제품명만 `hackathon.yaml`의 `product.name`에 기록한다. 결정이 늦어지면 임시 코드명을 제안하되 같은 적용 범위에서 채택이 확인된 경우에만 `product.name`에 기록한다. 팀 채택 미확인 이름은 기존 ideation/notes의 개인후보로 유지하고 공유 `product.name`에 기록하지 않는다. 재명명 시 영향 범위(제품 저장소/화면/문서/덱/제출 폼 중 해당 항목)를 `ideation.md` 또는 `hackathon.yaml` notes에 기록해 이후 `/adapt`·`/retro`에서 추적한다. `AGENTS.md`의 저장소 이름 규칙(행사명+날짜)과 설명 규칙은 유지하고 과거 행사의 일괄 rename은 하지 않는다.
 
 전체 재평가 결과는 `workspace/<event-slug>/ideation.md`에 이전 선택·근거를 보존하여 남긴다. 기존 선택은 `재평가 대기`로 명시하고 recommendation과 사용자 결정을 분리한다. 사용자 승인 없이 product·명칭·sponsor 채택을 덮어쓰지 않는다. `/replan` 내부에서는 이 조사·비교·기록·추천까지 실제 수행하고 선택 대기로 끝낸다.

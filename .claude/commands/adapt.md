@@ -6,7 +6,7 @@ description: 발표 조건 변경을 반영하고 해당하는 sponsor credentia
 
 ## 종료 게시 절차
 
-종료 시 사용자 재승인 없이 상시 승인된 이번 command의 검증된 변경만 게시한다. kit 기록과 제품 repo를 분리하고 각 저장소의 명시 경로·hunk만 stage한 뒤 staged diff를 검수해 commit·push한다(`git add .`/`-A` 금지). 기존 index와 다른 스레드 작업, secret·개인정보·개인사진·권한 없는 원본·생성 캐시는 제외하며 분리할 수 없으면 보류한다. 변경이 없으면 빈 commit을 만들지 않는다. 제한·충돌·실패 시 변경을 보존하고 게시 대기 범위와 이유를 보고한다. 대상 remote branch SHA를 readback해 로컬 commit SHA와 대조하고 종료 보고에 저장소별 SHA·push 상태를 포함한다. tag, reset, force push, branch 생성·삭제, 공개 전환과 앱 복원은 별도 승인이 필요하다. 이 절차는 구현·외부 제출이나 다음 command 실행의 포괄 승인이 아니다.
+종료 시 [게시 권한](../../references/workflow-policy.md#게시-권한)에서 확인한 승인 범위 안의 이번 command 검증 변경만 게시한다. 승인 미확인이면 허용된 로컬 작업은 계속하고 stage·commit·push만 보류하며, 템플릿을 승인 근거로 쓰지 않는다. kit 기록과 제품 repo를 분리하고 각 저장소의 명시 경로·hunk만 stage한 뒤 staged diff를 검수해 commit·push한다(`git add .`/`-A` 금지). 기존 index와 다른 스레드 작업, secret·개인정보·개인사진·권한 없는 원본·생성 캐시는 제외하며 분리할 수 없으면 보류한다. 변경이 없으면 빈 commit을 만들지 않는다. 제한·충돌·실패 시 변경을 보존하고 게시 대기 범위와 이유를 보고한다. 대상 remote branch SHA를 readback해 로컬 commit SHA와 대조하고 종료 보고에 저장소별 SHA·push 상태를 포함한다. tag, reset, force push, branch 생성·삭제, 공개 전환과 앱 복원은 별도 승인이 필요하다. 이 절차는 구현·외부 제출이나 다음 command 실행의 포괄 승인이 아니다.
 
 ## 실행 표시
 
@@ -55,8 +55,8 @@ description: 발표 조건 변경을 반영하고 해당하는 sponsor credentia
 아래 제품 보존·복구 확인은 제품 변경이 있을 때 적용한다. 발표 조건 기록만 하는 작업에 sponsor 연결을 강제하지 않으며 필수 입력 확인은 별도로 유지한다.
 
 - `AGENTS.md`의 제품 위치와 복구 경계를 따른다. Git 제품은 branch·HEAD·working tree와 `preparation.md`의 준비 변경 범위를 비교한다.
-- 준비 작업이 dirty였다면 HEAD만으로 복구하지 못한다. 이번 작업의 검증된 변경은 상시 승인 commit 등으로 보존하되 범위 밖 변경을 함께 commit하지 않는다. 미추적 파일까지 준비 상태 전체를 보존하고 복구 가능성을 확인하기 전에는 현장 수정을 시작하지 않는다. branch 분리만으로 준비 작업이 격리되지 않는다.
-- Git 현장 수정은 보존이 확인된 준비 상태를 기준으로 사용자 승인 아래 분리된 branch에서 한다. 이번 command의 검증된 변경에 대한 일반 commit·push는 종료 게시 절차의 상시 승인을 적용한다. tag, reset, force push, branch 생성·삭제, 공개 전환과 앱 복원은 별도 승인 없이 하지 않는다.
+- 준비 작업이 dirty였다면 HEAD만으로 복구하지 못한다. 이번 작업의 검증된 변경은 사용자가 승인한 commit 또는 별도 확인한 보존 방법 등으로 보존하되 범위 밖 변경을 함께 commit하지 않는다. 미추적 파일까지 준비 상태 전체를 보존하고 복구 가능성을 확인하기 전에는 현장 수정을 시작하지 않는다. branch 분리만으로 준비 작업이 격리되지 않는다.
+- Git 현장 수정은 보존이 확인된 준비 상태를 기준으로 사용자 승인 아래 분리된 branch에서 한다. 이번 command의 검증된 변경에 대한 일반 commit·push는 종료 게시 절차에서 확인한 게시 승인을 적용한다. tag, reset, force push, branch 생성·삭제, 공개 전환과 앱 복원은 별도 승인 없이 하지 않는다.
 - hosted app은 실제 앱 위치·소유 계정·권한과 준비 상태의 보존·복구 방법을 확인한 뒤 수정한다. 확인되지 않은 플랫폼 버전/복원 기능이나 Git commit을 기준점으로 적지 않는다. 복구 방법이 없거나 미확인이면 사용자와 방안을 정하고 보존을 확인할 때까지 수정을 보류한다.
 
 ## 연결

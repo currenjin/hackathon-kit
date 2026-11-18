@@ -6,7 +6,7 @@ description: 제품 준비, 제출, 발표 직전 상태를 실제 실행과 렌
 
 ## 종료 게시 절차
 
-종료 시 사용자 재승인 없이 상시 승인된 이번 command의 검증된 변경만 게시한다. kit 기록과 제품 repo를 분리하고 각 저장소의 명시 경로·hunk만 stage한 뒤 staged diff를 검수해 commit·push한다(`git add .`/`-A` 금지). 기존 index와 다른 스레드 작업, secret·개인정보·개인사진·권한 없는 원본·생성 캐시는 제외하며 분리할 수 없으면 보류한다. 변경이 없으면 빈 commit을 만들지 않는다. 제한·충돌·실패 시 변경을 보존하고 게시 대기 범위와 이유를 보고한다. 대상 remote branch SHA를 readback해 로컬 commit SHA와 대조하고 종료 보고에 저장소별 SHA·push 상태를 포함한다. tag, reset, force push, branch 생성·삭제, 공개 전환과 앱 복원은 별도 승인이 필요하다. 이 절차는 구현·외부 제출이나 다음 command 실행의 포괄 승인이 아니다.
+종료 시 [게시 권한](../../references/workflow-policy.md#게시-권한)에서 확인한 승인 범위 안의 이번 command 검증 변경만 게시한다. 승인 미확인이면 허용된 로컬 작업은 계속하고 stage·commit·push만 보류하며, 템플릿을 승인 근거로 쓰지 않는다. kit 기록과 제품 repo를 분리하고 각 저장소의 명시 경로·hunk만 stage한 뒤 staged diff를 검수해 commit·push한다(`git add .`/`-A` 금지). 기존 index와 다른 스레드 작업, secret·개인정보·개인사진·권한 없는 원본·생성 캐시는 제외하며 분리할 수 없으면 보류한다. 변경이 없으면 빈 commit을 만들지 않는다. 제한·충돌·실패 시 변경을 보존하고 게시 대기 범위와 이유를 보고한다. 대상 remote branch SHA를 readback해 로컬 commit SHA와 대조하고 종료 보고에 저장소별 SHA·push 상태를 포함한다. tag, reset, force push, branch 생성·삭제, 공개 전환과 앱 복원은 별도 승인이 필요하다. 이 절차는 구현·외부 제출이나 다음 command 실행의 포괄 승인이 아니다.
 
 ## 실행 표시
 
@@ -127,7 +127,13 @@ description: 제품 준비, 제출, 발표 직전 상태를 실제 실행과 렌
 - public이어야 하는 링크가 로그인 없이 열린다
 - 마감까지 남은 시간을 행사 timezone으로 확인했다
 
+## 사후 기준과 인계
+
+구현 뒤 기준을 작성하거나 그런 제품을 인계받았으면 [사후 기준과 인계 계약](../../references/workflow-policy.md#사후-기준과-인계)에 따라 보고 범위를 확인한다. 사전 독립 acceptance, 선행 명세 적합 관찰, 사후 기능 점검을 구분하고 모델 교체나 정적 검사로 사전성을 주장하지 않는다. ORACLE INVALID/UNVERIFIED의 격리와 기존 성과 주장 제한을 유지한다.
+
 ## 자료 인계 검수
+
+[통합 표본과 핵심 연결](../../references/delivery-handoffs.md#통합-표본과-핵심-연결)에서 명세와 case/승인된 제외의 대응, 실제 양쪽 관측과 누락된 흐름을 대조한다. 표본이 해당하지 않는 제품에는 새 데이터 구조를 요구하지 않고, 관찰·명세 적합 범위를 전체 제품 PASS로 올리지 않는다.
 
 [자료와 실행 기록 인계](../../references/delivery-handoffs.md)를 적용한다. pre-event에는 허용된 실행표의 담당·확인 시점·완료 증거·미달 시 축소 조건과 최초 호출의 승인·비용·실행/미실행 범위를 본다. 금지된 사전 명령·criteria·자료나 아직 없는 최종 사실표를 요구하지 않는다.
 

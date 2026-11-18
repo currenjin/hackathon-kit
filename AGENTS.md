@@ -10,7 +10,7 @@
 4. 쓰기로 한 sponsor는 credential이 없어도 공식 문서로 구현 가능한 데까지 준비한다. 현장에서는 key, endpoint, quota 확인과 smoke test만 남기는 상태를 목표로 한다.
 5. demo, deck, pitch, submission은 같은 사실과 숫자를 쓴다.
 6. AI가 만든 주장보다 실제 실행 결과와 재현 가능한 evidence를 우선한다.
-7. 행사별 상태와 산출물은 `workspace/<event-slug>/`에 둔다. 각 command 종료 시 이번 실행에서 생성·수정한 검증된 기록과 승인된 제품 변경을 해당 저장소에 범위를 분리해 커밋·푸시한다. 이 작업 방식에 대한 사용자 상시 승인을 적용하므로 매번 재승인을 요구하지 않는다. 변경이 없으면 빈 커밋 없이 변경 없음으로 보고한다. 비밀정보·개인정보·권한 없는 원본·생성 캐시·다른 스레드의 미완료 변경은 제외하며, 출판 제한이나 내용 충돌이 있으면 해당 범위를 보존하고 게시 보류 이유를 보고한다. 원격 branch SHA를 읽어 로컬 커밋과 일치하는지 확인한 뒤 커밋·푸시 결과를 종료 보고에 포함한다.
+7. 행사별 상태와 산출물은 `workspace/<event-slug>/`에 둔다. 종료 시 [게시 권한](references/workflow-policy.md#게시-권한)을 확인하고 이번 작업의 검증된 기록과 승인된 제품 변경만 대상별로 분리한다. 템플릿 자체는 stage·commit·push 권한을 부여하지 않는다. 이미 확인한 승인 범위는 재사용하되 현재 사용자의 명시적 금지와 보호 경로가 우선한다. 미승인 변경은 보존하고 미게시 범위와 이유를 보고한다. 게시했다면 원격 branch SHA와 로컬 commit의 일치를 확인하며, 변경이 없으면 빈 커밋을 만들지 않는다. 비밀정보·개인정보·권한 없는 원본·생성 캐시·다른 스레드의 미완료 변경은 제외한다.
 8. secret, API key, 개인 정보는 workspace에 저장하지 않는다.
 
 사전 제작·기존 제품 허용 범위는 `/init`에서 확인한다. 미확인 시 사용자 승인 가정으로 진행하는 범위를 기존 행사 기록에 남기되, 이를 공식 허용이나 계정 생성·앱/저장소 생성·제품 구현·외부 전송·유료 호출의 포괄 승인으로 보지 않는다. 제품 방향 승인과 실제 작업 승인은 별개다. 공식 금지 조건은 사용자 가정으로 무효화하지 않는다. 현장 제작만 허용되면 사전 구현을 요구하지 않고 허용된 준비 범위와 미구현 상태를 기록한다.
@@ -79,7 +79,7 @@
 - Git 제품: 수정 전에 branch, HEAD commit, working tree 상태를 확인한다. uncommitted 변경이 있으면 먼저 사용자에게 알리고 보존한다.
 - `/prepare` 종료 시 branch·HEAD와 working tree 상태, staged/unstaged/untracked 준비 변경 범위를 `preparation.md`에 남긴다. dirty 상태의 HEAD는 준비 작업을 포함하지 않으므로 복구 가능한 준비 완료 기준점이 아니다. `/adapt` 진입 전 사용자 승인 commit 등 준비 상태 전체를 보존·복구할 방법을 정하고 보존을 확인한다. branch 분리만으로 미커밋 작업이 보존·격리되었다고 보지 않는다.
 - hosted app: 실제 앱 위치·소유 계정·사용 권한과 사용 가능한 복구 방법 및 확인 근거를 기록한다. 플랫폼 버전·내보내기·복원 기능이 있다고 가정하거나 commit을 만들어 적지 않는다. 복구 방법이 미확인이거나 없으면 위험으로 남기고 `/adapt` 수정 전 사용자와 보존·복구 방안을 정해 확인한다.
-- 각 command의 검증된 작업 범위에 대한 일반 commit·push는 기본 원칙의 상시 승인에 따라 진행한다. tag, reset, force push, branch 생성·삭제, 공개 범위 변경과 앱 복원은 별도 사용자 승인 없이 하지 않는다.
+- 각 command의 검증된 작업 범위에 대한 일반 commit·push는 [게시 권한](references/workflow-policy.md#게시-권한)에서 확인한 범위 안에서 진행한다. tag, reset, force push, branch 생성·삭제, 공개 범위 변경과 앱 복원은 별도 사용자 승인 없이 하지 않는다.
 - Git에서는 `.env`, credential 파일, secret이 tracked 또는 staged 상태가 아닌지 확인한다. hosted app에서도 화면·공개 설정에 secret이 노출되지 않는지 확인한다.
 
 ## Command 입출력
@@ -92,11 +92,11 @@
 | `/init` | 공식 행사 페이지와 rules, `templates/hackathon.yaml` | `hackathon.yaml`, 팀 응답 후 신규 본인 `members/<member-id>.yaml` |
 | `/ideate` | `hackathon.yaml`, `products.md`, `references/` | `hackathon.yaml`의 `product`, `ideation.md`(필요하면) |
 | `/design` | `hackathon.yaml`, 제품 위치(초안은 미정 가능) | `design.md`, 승인된 제품 UI |
-| `/demo` pre-event | `hackathon.yaml`, `design.md`(있으면), 제품과 독립된 명세·손 계산 등 | demo contract의 expected·출처·control, `hackathon.yaml`의 `demo_contract` |
-| `/prepare` | `hackathon.yaml`, `design.md`(있으면), pre-event demo contract, 제품 위치 | `preparation.md`, 승인된 제품 코드·앱 상태 |
+| `/demo criteria` | `hackathon.yaml`, 설계 초안(있으면), 제품과 독립된 명세·손 계산 등 | demo contract의 expected·출처·control, `hackathon.yaml`의 `demo_contract` |
+| `/prepare` | `hackathon.yaml`, `design.md`(있으면), 허용된 시점에 고정한 criteria contract, 제품 위치 | `preparation.md`, 승인된 제품 코드·앱 상태 |
 | `/preflight` pre-event | 위 기록, 고정된 expected, local/mock 실행 결과 | `preflight-pre-event.md` |
 | `/adapt` | `hackathon.yaml`, `preparation.md` | `adaptation.md`, 제품 설정 |
-| `/demo` on-site | 고정된 demo contract, `preparation.md`, `adaptation.md`(있으면), 실제 실행 evidence | 동일 contract의 actual·verdict·evidence (expected 변경 금지) |
+| `/demo verify` | 고정된 demo contract, `preparation.md`, `adaptation.md`(있으면), 실제 실행 evidence | 동일 contract의 actual·verdict·evidence (expected 변경 금지) |
 | `/deck` | demo contract, 실행 evidence, `design.md`, 실제 제품 위치 | `output/deck/` |
 | `/pitch` | `hackathon.yaml`의 언어 설정, deck, demo contract, 실행 evidence | `output/pitch/`, `output/guide/<lang>.md` |
 | `/present` | `/deck` 렌더 이미지, 같은 언어의 `/pitch` 대본 | `output/presenter/<lang>/`(deck.js + 슬라이드 이미지), `tools/presenter/decks.js` 한 줄 |
@@ -148,7 +148,7 @@ sponsor 항목의 N/A는 위 Sponsor 사용 조건을 따른다. 채택 미정�
 
 demo 파일의 schema는 프로젝트마다 다르다. 공통 필드를 강제하지 않는다.
 
-`/demo`의 pre-event 실행은 `/design` 뒤, 제품 출력으로 시나리오를 판정하기 전에 contract에 독립적인 expected·출처·제품 유형별 검증 기준을 고정한다. `/prepare`에서 local/mock으로 재현하고 pre-event `/preflight`에서 검사한다. 현장 `/demo`에서는 같은 contract에 실제 결과와 evidence를 붙인다. 현장 결과에 맞춰 expected를 바꾸지 않는다. 근거 오류가 드러나면 ORACLE INVALID/UNVERIFIED로 격리한다. 독립 근거를 재검증해 수정하더라도 이번 행사에서 해당 scenario를 PASS 근거로 다시 사용하지 않고 한계로만 보고한다. 이전 버전과 변경 이유는 보존하고 새 기준은 향후 별도로 검증한다.
+`/demo`는 criteria(기준수립)와 verify(실행검증) 역할로 구분한다. 공식 허용과 사용자 승인 안에서 설계 초안 → criteria 고정 → 승인된 실제 UI 구현 순서를 따른다. `/design`의 설계 검토는 criteria 전에 가능하지만 실제 제품 UI 구현은 criteria 뒤다. criteria는 제품 출력 판정 전에 독립적인 expected·출처·제품 유형별 검증 기준을 고정하고, `/prepare`는 허용된 local/mock으로 재현한다. verify는 구현과 필요한 실제 연결 뒤 같은 contract에 실제 결과와 evidence를 붙인다. pre-event/on-site는 호환별칭이지 시간 허가가 아니다. 결과에 맞춰 expected를 바꾸지 않으며 근거 오류는 ORACLE INVALID/UNVERIFIED로 격리한다. 독립 근거를 재검증해 수정해도 해당 scenario를 이번 행사 PASS로 되살리지 않는다. 이전 버전과 변경 이유는 보존하고, 이미 구현된 제품의 인계는 [사후 기준과 인계](references/workflow-policy.md#사후-기준과-인계)를 따른다.
 
 ### Ground truth와 verdict
 

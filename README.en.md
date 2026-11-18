@@ -20,6 +20,8 @@ A typical flow when building before the event is allowed:
 
 When the rules only allow building on site, planning and design happen before the event and implementation starts at the official start time. Start a new session with `/onboard` to pick an unfinished event and see what is left.
 
+Publication permission is not granted by using this template. Confirm the allowed local edits, staging/commits and pushes for the target repository, branch and paths before publication. Reuse an existing explicit approval within its scope; current prohibitions take precedence. Unapproved publication stays pending without blocking permitted local work. See the [publication permission policy](references/workflow-policy.md#게시-권한).
+
 ## Principles
 
 - Demo criteria are fixed before the product exists. Expected values never come from the product's own output.

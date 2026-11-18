@@ -6,7 +6,7 @@ description: 프로젝트에 맞는 demo scenario와 ground truth를 고정한�
 
 ## 종료 게시 절차
 
-종료 시 사용자 재승인 없이 상시 승인된 이번 command의 검증된 변경만 게시한다. kit 기록과 제품 repo를 분리하고 각 저장소의 명시 경로·hunk만 stage한 뒤 staged diff를 검수해 commit·push한다(`git add .`/`-A` 금지). 기존 index와 다른 스레드 작업, secret·개인정보·개인사진·권한 없는 원본·생성 캐시는 제외하며 분리할 수 없으면 보류한다. 변경이 없으면 빈 commit을 만들지 않는다. 제한·충돌·실패 시 변경을 보존하고 게시 대기 범위와 이유를 보고한다. 대상 remote branch SHA를 readback해 로컬 commit SHA와 대조하고 종료 보고에 저장소별 SHA·push 상태를 포함한다. tag, reset, force push, branch 생성·삭제, 공개 전환과 앱 복원은 별도 승인이 필요하다. 이 절차는 구현·외부 제출이나 다음 command 실행의 포괄 승인이 아니다.
+종료 시 [게시 권한](../../references/workflow-policy.md#게시-권한)에서 확인한 승인 범위 안의 이번 command 검증 변경만 게시한다. 승인 미확인이면 허용된 로컬 작업은 계속하고 stage·commit·push만 보류하며, 템플릿을 승인 근거로 쓰지 않는다. kit 기록과 제품 repo를 분리하고 각 저장소의 명시 경로·hunk만 stage한 뒤 staged diff를 검수해 commit·push한다(`git add .`/`-A` 금지). 기존 index와 다른 스레드 작업, secret·개인정보·개인사진·권한 없는 원본·생성 캐시는 제외하며 분리할 수 없으면 보류한다. 변경이 없으면 빈 commit을 만들지 않는다. 제한·충돌·실패 시 변경을 보존하고 게시 대기 범위와 이유를 보고한다. 대상 remote branch SHA를 readback해 로컬 commit SHA와 대조하고 종료 보고에 저장소별 SHA·push 상태를 포함한다. tag, reset, force push, branch 생성·삭제, 공개 전환과 앱 복원은 별도 승인이 필요하다. 이 절차는 구현·외부 제출이나 다음 command 실행의 포괄 승인이 아니다.
 
 ## 실행 표시
 
@@ -38,6 +38,10 @@ description: 프로젝트에 맞는 demo scenario와 ground truth를 고정한�
 
 demo schema는 프로젝트마다 다르다. 고정 YAML 필드를 강제하지 않는다. YAML, JSON, Markdown 중 제품에 가장 읽기 쉬운 형식을 선택하고 현재 행사 workspace에 둔다.
 
+## 사후 기준과 인계
+
+이미 구현된 제품이나 구현 뒤 작성된 기준을 받으면 [사후 기준과 인계 계약](../../references/workflow-policy.md#사후-기준과-인계)을 먼저 적용한다. 선행 명세의 조건별 적합 관찰과 사후 기능 점검을 기록하되 사전 독립 acceptance 완료로 보고하지 않는다. 기준 작성 시점·출처와 actual을 본 범위를 보존하며 모델 교체만으로 독립성을 복구하지 않는다. 기존 ORACLE INVALID/UNVERIFIED의 PASS 복원 금지는 그대로다.
+
 ## 순서
 
 1. criteria에서 scenario별 expected 값을 제품·모델 출력과 독립적인 명세나 손 계산 등으로 정하고 출처를 적는다. 제품 코드와 테스트는 동작 확인 자료로 쓰되 제품이 만든 expected의 독립 근거로 단독 사용하지 않는다.
@@ -59,6 +63,8 @@ demo schema는 프로젝트마다 다르다. 고정 YAML 필드를 강제하지 
 ORACLE INVALID나 UNVERIFIED를 제품의 문제 발견(예: collision)이나 PRODUCT FAIL로 적지 않는다. 같은 모델이나 여러 모델이 같은 답을 반복해도 expected의 근거가 되지 않는다.
 
 ## 필수 조건별 관측과 집계
+
+[통합 표본과 핵심 연결](../../references/delivery-handoffs.md#통합-표본과-핵심-연결)에 따라 해당 제품의 핵심 명세가 case 또는 승인된 제외에 대응하는지 확인한다. 생성·송신·수신·저장·재열람·다음 행동 중 명세가 약속한 범위만 같은 대상·버전으로 검사하며, 수신 PASS를 아카이브나 전체 흐름 PASS로 확대하지 않는다. 빠진 조건을 사후 추가해 기존 실패를 PASS로 바꾸지 않는다.
 
 case별 필수 조건의 실제 관측과 부분 판정, 전체 판정 이유를 함께 기록한다. 숫자 일치만으로 UI·provenance·상태 전이를 포함한 case 전체를 PASS로 올리지 않는다. DOM 텍스트 존재와 실제 표시를 구분해 display:none·잘림·접힌 상태를 확인하고, 실패 뒤 재시도는 새 요청·동일 입력 식별자·최종 결과를 대조한다. CLI/API 제품은 해당 입출력과 보존 상태로 검사하며 없는 웹 UI를 요구하지 않는다.
 

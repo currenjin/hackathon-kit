@@ -6,7 +6,7 @@ description: 심사 기준, 실제 제품, demo evidence를 하나의 발표 서
 
 ## 종료 게시 절차
 
-종료 시 사용자 재승인 없이 상시 승인된 이번 command의 검증된 변경만 게시한다. kit 기록과 제품 repo를 분리하고 각 저장소의 명시 경로·hunk만 stage한 뒤 staged diff를 검수해 commit·push한다(`git add .`/`-A` 금지). 기존 index와 다른 스레드 작업, secret·개인정보·개인사진·권한 없는 원본·생성 캐시는 제외하며 분리할 수 없으면 보류한다. 변경이 없으면 빈 commit을 만들지 않는다. 제한·충돌·실패 시 변경을 보존하고 게시 대기 범위와 이유를 보고한다. 대상 remote branch SHA를 readback해 로컬 commit SHA와 대조하고 종료 보고에 저장소별 SHA·push 상태를 포함한다. tag, reset, force push, branch 생성·삭제, 공개 전환과 앱 복원은 별도 승인이 필요하다. 이 절차는 구현·외부 제출이나 다음 command 실행의 포괄 승인이 아니다.
+종료 시 [게시 권한](../../references/workflow-policy.md#게시-권한)에서 확인한 승인 범위 안의 이번 command 검증 변경만 게시한다. 승인 미확인이면 허용된 로컬 작업은 계속하고 stage·commit·push만 보류하며, 템플릿을 승인 근거로 쓰지 않는다. kit 기록과 제품 repo를 분리하고 각 저장소의 명시 경로·hunk만 stage한 뒤 staged diff를 검수해 commit·push한다(`git add .`/`-A` 금지). 기존 index와 다른 스레드 작업, secret·개인정보·개인사진·권한 없는 원본·생성 캐시는 제외하며 분리할 수 없으면 보류한다. 변경이 없으면 빈 commit을 만들지 않는다. 제한·충돌·실패 시 변경을 보존하고 게시 대기 범위와 이유를 보고한다. 대상 remote branch SHA를 readback해 로컬 commit SHA와 대조하고 종료 보고에 저장소별 SHA·push 상태를 포함한다. tag, reset, force push, branch 생성·삭제, 공개 전환과 앱 복원은 별도 승인이 필요하다. 이 절차는 구현·외부 제출이나 다음 command 실행의 포괄 승인이 아니다.
 
 ## 실행 표시
 
@@ -193,7 +193,7 @@ diagram은 실제 architecture나 실행 순서를 설명할 때만 쓴다.
 
 결과는 `workspace/<event-slug>/output/deck/`에 저장한다.
 
-새 iteration(review-v2 등)을 만들 때는 해당 iteration 디렉터리의 `report.md` 상단에 흐름 breadcrumb와 `presentation.review.status`(현재 상태) 및 이전 iteration 처리(superseded or kept)를 명시한다. 동시에 `hackathon.yaml`의 `presentation.review`를 갱신한다: 승인 전까지 `active_version: null`과 `status: in_review`, 사용자 승인 시 `active_version`을 해당 iteration 상대 경로로 설정하고 `status: approved`, `reviewed_at` 기록. superseded 처리한 이전 iteration은 `superseded_versions`에 추가하고 kept는 포함하지 않는다. 발표 기준 iteration은 하나만 active이며 명시 전에는 결정하지 않는다. 기존 workspace에 review 필드가 비어 있다고 임의로 채우지 않는다. 이 kit 기록 변경은 종료 게시 절차의 상시 승인으로 commit·push해 추적을 유지한다.
+새 iteration(review-v2 등)을 만들 때는 해당 iteration 디렉터리의 `report.md` 상단에 흐름 breadcrumb와 `presentation.review.status`(현재 상태) 및 이전 iteration 처리(superseded or kept)를 명시한다. 동시에 `hackathon.yaml`의 `presentation.review`를 갱신한다: 승인 전까지 `active_version: null`과 `status: in_review`, 사용자 승인 시 `active_version`을 해당 iteration 상대 경로로 설정하고 `status: approved`, `reviewed_at` 기록. superseded 처리한 이전 iteration은 `superseded_versions`에 추가하고 kept는 포함하지 않는다. 발표 기준 iteration은 하나만 active이며 명시 전에는 결정하지 않는다. 기존 workspace에 review 필드가 비어 있다고 임의로 채우지 않는다. 이 kit 기록 변경은 종료 게시 절차에서 확인한 게시 승인으로 commit·push해 추적을 유지한다.
 
 가능한 환경에서는 아래를 만든다.
 

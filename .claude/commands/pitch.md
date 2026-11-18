@@ -6,7 +6,7 @@ description: deck과 live demo를 제한 시간 안에 전달할 수 있는 실�
 
 ## 종료 게시 절차
 
-종료 시 사용자 재승인 없이 상시 승인된 이번 command의 검증된 변경만 게시한다. kit 기록과 제품 repo를 분리하고 각 저장소의 명시 경로·hunk만 stage한 뒤 staged diff를 검수해 commit·push한다(`git add .`/`-A` 금지). 기존 index와 다른 스레드 작업, secret·개인정보·개인사진·권한 없는 원본·생성 캐시는 제외하며 분리할 수 없으면 보류한다. 변경이 없으면 빈 commit을 만들지 않는다. 제한·충돌·실패 시 변경을 보존하고 게시 대기 범위와 이유를 보고한다. 대상 remote branch SHA를 readback해 로컬 commit SHA와 대조하고 종료 보고에 저장소별 SHA·push 상태를 포함한다. tag, reset, force push, branch 생성·삭제, 공개 전환과 앱 복원은 별도 승인이 필요하다. 이 절차는 구현·외부 제출이나 다음 command 실행의 포괄 승인이 아니다.
+종료 시 [게시 권한](../../references/workflow-policy.md#게시-권한)에서 확인한 승인 범위 안의 이번 command 검증 변경만 게시한다. 승인 미확인이면 허용된 로컬 작업은 계속하고 stage·commit·push만 보류하며, 템플릿을 승인 근거로 쓰지 않는다. kit 기록과 제품 repo를 분리하고 각 저장소의 명시 경로·hunk만 stage한 뒤 staged diff를 검수해 commit·push한다(`git add .`/`-A` 금지). 기존 index와 다른 스레드 작업, secret·개인정보·개인사진·권한 없는 원본·생성 캐시는 제외하며 분리할 수 없으면 보류한다. 변경이 없으면 빈 commit을 만들지 않는다. 제한·충돌·실패 시 변경을 보존하고 게시 대기 범위와 이유를 보고한다. 대상 remote branch SHA를 readback해 로컬 commit SHA와 대조하고 종료 보고에 저장소별 SHA·push 상태를 포함한다. tag, reset, force push, branch 생성·삭제, 공개 전환과 앱 복원은 별도 승인이 필요하다. 이 절차는 구현·외부 제출이나 다음 command 실행의 포괄 승인이 아니다.
 
 ## 실행 표시
 
@@ -120,7 +120,7 @@ live demo는 "클릭한다" 수준이 아니라 실제 순서를 적는다.
 
 `workspace/<event-slug>/output/pitch/`에 저장한다.
 
-새 iteration을 만들 때는 해당 iteration의 `report.md` 상단에 흐름 breadcrumb와 `presentation.review.status` 및 이전 iteration 처리(superseded or kept)를 명시하고 `hackathon.yaml`의 `presentation.review`를 갱신한다. 발표 기준 iteration은 하나만 active이며 승인 전은 `active_version: null`·`status: in_review`로 유지한다. 기존 workspace에 review 필드가 비어 있다고 임의로 채우지 않는다. 이 kit 기록 변경은 종료 게시 절차의 상시 승인으로 commit·push해 추적을 유지한다.
+새 iteration을 만들 때는 해당 iteration의 `report.md` 상단에 흐름 breadcrumb와 `presentation.review.status` 및 이전 iteration 처리(superseded or kept)를 명시하고 `hackathon.yaml`의 `presentation.review`를 갱신한다. 발표 기준 iteration은 하나만 active이며 승인 전은 `active_version: null`·`status: in_review`로 유지한다. 기존 workspace에 review 필드가 비어 있다고 임의로 채우지 않는다. 이 kit 기록 변경은 종료 게시 절차에서 확인한 게시 승인으로 commit·push해 추적을 유지한다.
 
 `language.public_guide`에 설정된 각 언어의 public guide는 `workspace/<event-slug>/output/guide/<lang>.md`에 작성한다. 내용은 `.claude/rules/language.md`를 따르고 deck·demo의 검증된 사실과 숫자를 유지한다. 발표자와 청중 언어가 다르면 대본보다 guide를 우선 작성한다. 작성은 공개·발송이 아니다. `public_links.guide`는 실제 공개 후 비로그인 접근을 확인한 URL만 기록한다.
 

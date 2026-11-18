@@ -13,7 +13,7 @@ description: kit을 처음 받거나 새 세션에서 진행 중인 해커톤의
 ## 1. kit 규칙 익히기
 
 1. `AGENTS.md`, `CLAUDE.md`를 읽는다.
-2. `references/workflow-policy.md`, `references/model-routing.md`를 읽는다.
+2. `references/workflow-policy.md`, `references/model-routing.md`를 읽는다. 게시 권한은 현재 사용자의 기존 승인 기록에서 확인하되 템플릿의 과거 문구로 승인을 추정하지 않는다. 읽기 전용 브리핑을 위해 새 게시 승인이나 공유 설정 변경을 요구하지 않는다.
 3. `.claude/rules/`의 글쓰기·언어·디자인 규칙 목록을 확인한다(본문은 필요할 때 읽는다).
 4. `.claude/commands/`의 command 이름과 description만 훑는다.
 

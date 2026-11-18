@@ -81,4 +81,4 @@ description: 같은 workspace에서 init 재확인과 ideate 전체 재평가를
 - 원문 접근 불가·핵심 규칙 충돌이면 재계획은 부분완료/확인 대기로 종료한다. 확인된 금지와 그 안전 조치는 즉시 기록할 수 있지만 미확인 해결을 주장하지 않는다.
 - 종료에는 init 재확인과 ideate 전체 재평가 각각의 실제 수행·미수행 범위, 변경 규칙, 유지/철회된 산출물·상태, recommendation, 사용자 결정 대기, 다음 command와 시작 조건을 보고한다. 재계획 완료는 제품 선택·구현 완료가 아니다.
 
-종료 시 이번 command의 검증된 행사 기록만 상시 승인에 따라 commit·push한다. kit와 제품 repo를 분리하고 명시 경로·hunk만 stage한다(`git add .`/`-A` 금지). 다른 스레드 변경·secret·개인정보·권한 없는 원본·캐시는 제외하고 분리 불가 시 보류한다. 빈 commit은 만들지 않는다. staged diff 검수 후 게시하고 원격 branch SHA를 로컬 commit과 대조한다. 실패 시 작업을 보존하고 게시 대기로 보고한다. 이 절차는 제품 변경·외부 제출·다음 command의 실행 승인이 아니다.
+종료 시 [게시 권한](../../references/workflow-policy.md#게시-권한)에서 확인한 승인 범위 안의 이번 command 검증 행사 기록만 commit·push한다. 미승인 게시만 보류하고 허용된 로컬 작업은 계속한다. kit와 제품 repo를 분리하고 명시 경로·hunk만 stage한다(`git add .`/`-A` 금지). 다른 스레드 변경·secret·개인정보·권한 없는 원본·캐시는 제외하고 분리 불가 시 보류한다. 빈 commit은 만들지 않는다. staged diff 검수 후 게시하고 원격 branch SHA를 로컬 commit과 대조한다. 실패 시 작업을 보존하고 게시 대기로 보고한다. 이 절차는 제품 변경·외부 제출·다음 command의 실행 승인이 아니다.
